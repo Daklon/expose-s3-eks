@@ -1,0 +1,30 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+    name: expose-s3-eks
+    region: eu-west-1
+
+nodeGroups:
+    - name: ng-1
+      minSize: 2
+      maxSize: 5
+      instancesDistribution:
+        maxPrice: 0.017
+        instanceTypes: ["t3.small", "t3.medium"] # At least one instance type should be specified
+        onDemandBaseCapacity: 0
+        onDemandPercentageAboveBaseCapacity: 50
+        spotInstancePools: 2
+
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: s3-reader
+      # if no namespace is set, "default" will be used;
+      # the namespace will be created if it doesn't exist already
+      namespace: s3-exposer
+      labels: {aws-usage: "application"}
+    attachPolicyARNs:
+    - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
