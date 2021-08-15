@@ -28,3 +28,11 @@ iam:
       labels: {aws-usage: "application"}
     attachPolicyARNs:
     - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  - metadata:
+      name: external-dns
+      namespace: external-dns
+      labels: {aws-usage: "application"}
+    wellKnownPolicies:
+      externalDNS: true
+    roleName: eksctl-external-dns
+
